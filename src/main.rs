@@ -7,7 +7,7 @@ mod error;
 
 use tokio::net::TcpListener;
 use audit::audit::audit;
-use ws::connection::hendl_connection;
+use ws::connection::handle_connection;
 
 
 #[tokio::main]
@@ -22,7 +22,7 @@ async fn main() -> tokio::io::Result<()>{
 
     // New theard user WS connect
     while let Ok((stream, _)) = listener.accept().await {
-        tokio::spawn(hendl_connection(stream));        
+        tokio::spawn(handle_connection(stream));        
     }
 
     Ok(())
