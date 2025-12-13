@@ -3,6 +3,7 @@ mod toml;
 mod audit;
 mod ws;
 mod actions;
+mod error;
 
 use tokio::net::TcpListener;
 use audit::audit::audit;

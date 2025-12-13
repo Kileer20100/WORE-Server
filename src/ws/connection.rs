@@ -1,15 +1,14 @@
 
-use futures::sink::Send;
-use serde_json::Value;
-use tokio::net::TcpListener;
+
 use tokio::net::TcpStream; 
 use tokio_tungstenite::accept_async;
 use futures::{StreamExt, SinkExt};
 
-use serde::{Serialize, Deserialize};
-use serde_json;
+
+use tungstenite::Message;
 use crate::ws::router::routing_json;
 
+use crate::error::error::ServeError;
 
 pub async fn hendl_connection(stream: TcpStream){
     let ws_stream = match accept_async(stream).await {
@@ -38,12 +37,13 @@ pub async fn hendl_connection(stream: TcpStream){
             
             }
             Err(e) => {
-                eprintln!("Read error: {}", e);
+                let error_message = format!("{}",e);
+                let msg: Message = ServeError::ErrorSendMessage(error_message).to_string().into();
+                let _ = writer.send(msg).await;
                 break;
             }
         }
     }
 
-    println!("Connection closed");
 
 }
