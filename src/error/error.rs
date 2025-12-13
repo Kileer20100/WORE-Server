@@ -12,7 +12,7 @@ pub enum ServeError{
     /// 
     /// # Parameters
     /// - `0`: The underlying error message from the transport layer
-    #[error("Error send message: {0}")]
+    #[error("Error send message: '{0}'")]
     ErrorSendMessage(String),
 
     /// Failed to parse incoming WebSocket message as valid JSON.
@@ -31,4 +31,18 @@ pub enum ServeError{
     /// - `0`: The action string that was requested
     #[error("Unknown action: '{0}'")]
     ErrorRoutingMessage(String),
+
+    /// Failed to establish WebSocket handshake with client.
+    /// 
+    /// This error occurs during the initial WebSocket connection upgrade
+    /// from HTTP to WebSocket protocol. Common causes include:
+    /// - Invalid WebSocket upgrade headers
+    /// - Network connectivity issues
+    /// - Client timeout during handshake
+    /// - Protocol version mismatch
+    /// 
+    /// # Parameters
+    /// - `0`: The underlying handshake error message
+    #[error("WebSocket handshake error: '{0}'")]
+    WebSocketHandshakeError(String),
 }

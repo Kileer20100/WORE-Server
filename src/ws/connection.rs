@@ -14,7 +14,7 @@ pub async fn hendl_connection(stream: TcpStream){
     let ws_stream = match accept_async(stream).await {
         Ok(ws) => ws,
         Err(e) => {
-            eprintln!("WebSocket handshake error: {}", e);
+            println!("{}",ServeError::WebSocketHandshakeError(e.to_string()));
             return;
         }
         
