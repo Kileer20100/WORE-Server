@@ -11,7 +11,6 @@ use serde_json;
 use crate::ws::router::routing_json;
 
 
-
 pub async fn hendl_connection(stream: TcpStream){
     let ws_stream = match accept_async(stream).await {
         Ok(ws) => ws,
@@ -23,15 +22,15 @@ pub async fn hendl_connection(stream: TcpStream){
     };
     println!("New WebSocket connection");
 
-    let(mut write , mut read) = ws_stream.split();
+    let(mut writer , mut read) = ws_stream.split();
+    
     while let Some(msg) = read.next().await {
         match msg {
 
             Ok(msg) => match msg {
                 
                 tokio_tungstenite::tungstenite::Message::Text(text) =>{
-                        routing_json(text).await;
-                        write.send("dd".into()).await.unwrap();
+                        routing_json(&text, &mut writer).await;
                     }
 
                 tokio_tungstenite::tungstenite::Message::Close(_) => break,
